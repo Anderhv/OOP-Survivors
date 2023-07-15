@@ -35,6 +35,8 @@ public abstract class Enemy : MonoBehaviour
     private void Update()
     {
         MoveTowardsPlayer();
+        transform.LookAt(_player.transform.position);
+        
     }
 
     protected virtual void OnInitialize() { }

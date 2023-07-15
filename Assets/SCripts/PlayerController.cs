@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float maxHealth = 100f;
     private float _health { get; set; }
+    private float _speed = 1.0f;
 
     private GameManager _gm;
 
@@ -30,7 +31,20 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+        HandleMovementInput();
+        HandleMouseInput();
+    }
+    
+    private void HandleMovementInput()
+    {
+        var horizontalInput = Input.GetAxis("Horizontal");
+        var verticalInput = Input.GetAxis("Vertical");
+        var movementDirection = new Vector3(horizontalInput, 0, verticalInput);
+        transform.position += movementDirection * _speed * Time.deltaTime;
+    }
 
+    private void HandleMouseInput()
+    {
         // Rotate player towards mouse position
         var mousePosition = Input.mousePosition;
         var mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePosition);

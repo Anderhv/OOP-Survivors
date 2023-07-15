@@ -54,7 +54,6 @@ public class BulletBehavior : MonoBehaviour
         {
             return;
         }
-        Debug.Log(other.gameObject.name);
         if (other.gameObject.CompareTag("Enemy"))
         {
             _audioSource.Play();
