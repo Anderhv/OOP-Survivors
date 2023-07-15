@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public bool isGameOver = false;
 
-    private float _spawnDelay = 0.2f;
+    private float _spawnDelay = 0.4f;
 
     private GameObject player;
     
