@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,14 +34,7 @@ public abstract class Enemy : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!InRangeToAttackPlayer())
-        {
-            MoveTowardsPlayer();
-        }
-        else
-        {
-            AttackPlayer();
-        }
+        MoveTowardsPlayer();
     }
 
     protected virtual void OnInitialize() { }
@@ -58,7 +52,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
     
-    private bool InRangeToAttackPlayer()
+    /*private bool InRangeToAttackPlayer()
     {
         // Check if in range to attack player
         if (Vector2.Distance(
@@ -69,11 +63,19 @@ public abstract class Enemy : MonoBehaviour
             return true;
         }
         return false;
+    }*/
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            AttackPlayer();
+        }
     }
 
     protected abstract void MoveTowardsPlayer();
 
-    protected virtual void AttackPlayer()
+    private void AttackPlayer()
     {
         // Attack player
         _playerController.TakeDamage(attackDamage);
