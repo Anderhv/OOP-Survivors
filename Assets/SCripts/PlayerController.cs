@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource _audio;
     public AudioClip shootSound;
     public AudioClip hurtSound;
+    public AudioClip deathSound;
     
     // Start is called before the first frame update
     void Start()
@@ -53,15 +54,18 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         _health -= damage;
-        _audio.PlayOneShot(hurtSound, 0.2f);
-        EndGameIfDead();
+        _audio.PlayOneShot(hurtSound, 1f);
+        if (PlayerIsDead())
+        {
+            _audio.PlayOneShot(deathSound, 0.5f);
+            _gm.EndGame();
+        }
     }
 
-    private bool EndGameIfDead()
+    private bool PlayerIsDead()
     {
         if (_health <= 0)
         {
-            _gm.EndGame();
             return true;
         }
         return false;
