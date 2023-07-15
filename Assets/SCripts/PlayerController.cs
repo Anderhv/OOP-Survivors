@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,9 +9,14 @@ public class PlayerController : MonoBehaviour
     private float _health { get; set; }
     private float _speed = 1.0f;
 
+    public float xMax = 8.0f;
+    public float zMax = 4.0f;
+
     private GameManager _gm;
 
     public GameObject bulletPrefab;
+
+    private Slider _healthBarSlider;
 
     private AudioSource _audio;
     public AudioClip shootSound;
@@ -20,9 +26,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        transform.position = new Vector3(0, 0.3f, 0);
         _health = maxHealth;
         _audio = GetComponent<AudioSource>();
-        _gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();        
+        _gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        _healthBarSlider = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
     }
 
     private void Update()
@@ -35,12 +43,16 @@ public class PlayerController : MonoBehaviour
         HandleMouseInput();
     }
     
+    
     private void HandleMovementInput()
     {
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
         var movementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        transform.position += movementDirection * _speed * Time.deltaTime;
+        var newPosition = transform.position + movementDirection * _speed * Time.deltaTime;
+        newPosition.x = Mathf.Clamp(newPosition.x, -xMax, xMax);
+        newPosition.z = Mathf.Clamp(newPosition.z, -zMax, zMax);
+        transform.position = newPosition;
     }
 
     private void HandleMouseInput()
@@ -71,7 +83,8 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        _health -= damage;
+        _health = Mathf.Max(0, _health - damage);
+        _healthBarSlider.value = _health / maxHealth;
         _audio.PlayOneShot(hurtSound, 1f);
         if (PlayerIsDead())
         {
