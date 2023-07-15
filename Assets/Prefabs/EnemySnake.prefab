@@ -114,6 +114,7 @@ MonoBehaviour:
   speed: 1
   attackRange: 1
   attackDamage: 1
+  EnemyType: 2
   movementDuration: 3
 --- !u!96 &1295696762
 TrailRenderer:

@@ -8,6 +8,14 @@ public abstract class Enemy : MonoBehaviour
     public float attackRange = 1f;
     public float attackDamage = 1f;
     
+    public EnemyTypes enemyType;
+    public enum EnemyTypes
+    {
+        Ball,
+        Cube,
+        Snake
+    }
+    
     protected GameObject _player;
     protected PlayerController _playerController;
     
@@ -36,6 +44,19 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected virtual void OnInitialize() { }
+
+    public float GetScore()
+    {
+        switch (enemyType)
+        {
+            case EnemyTypes.Cube:
+                return 10f;
+            case EnemyTypes.Snake:
+                return 15f;
+            default:
+                return 5f;
+        }
+    }
     
     private bool InRangeToAttackPlayer()
     {

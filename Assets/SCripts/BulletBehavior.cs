@@ -16,10 +16,13 @@ public class BulletBehavior : MonoBehaviour
     
     private AudioSource _audioSource;
     
+    private GameManager _gm;
+    
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
         _meshRenderer = GetComponent<MeshRenderer>();
+        _gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
     
     void Update()
@@ -57,6 +60,11 @@ public class BulletBehavior : MonoBehaviour
             _audioSource.Play();
             Destroy(other.gameObject);
             StartCoroutine(DestroyAfterDelay());
+            var enemy = other.GetComponent<Enemy>();
+            if (enemy is not null)
+            {
+                _gm.IncreaseScore(enemy.GetScore());
+            }
         }
     }
 

@@ -113,3 +113,4 @@ MonoBehaviour:
   speed: 1
   attackRange: 1
   attackDamage: 1
+  EnemyType: 1

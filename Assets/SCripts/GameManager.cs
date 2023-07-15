@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public bool isGameOver = false;
-
+    public float Score { get; private set; }
+    
     private float _spawnDelay = 0.4f;
 
     private GameObject player;
     
     private GameObject _gameOverScreen;
+    
+    public TMPro.TextMeshProUGUI scoreText;
     
     public List<GameObject> enemyPrefabs;
     
@@ -30,6 +34,12 @@ public class GameManager : MonoBehaviour
             SpawnEnemy();
             yield return new WaitForSeconds(_spawnDelay);
         }
+    }
+
+    public void IncreaseScore(float amount)
+    {
+        Score += amount;
+        scoreText.text = $"Score: {Score}";
     }
 
     private void SpawnEnemy()
