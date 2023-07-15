@@ -8,11 +8,27 @@ public class BulletBehavior : MonoBehaviour
     private float _speed = 5f;
     private Vector3 _direction;
     
-    private float _timeToLive = 5f;
+    private readonly float _timeToLive = 5f;
     private float _timeAlive = 0f;
+
+    private bool _isActive = true;
+    private MeshRenderer _meshRenderer;
+    
+    private AudioSource _audioSource;
+    
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+        _meshRenderer = GetComponent<MeshRenderer>();
+    }
     
     void Update()
     {
+        if (!_isActive)
+        {
+            return;
+        }
+        
         // Move in direction
         transform.position += _direction * _speed * Time.deltaTime;
         
@@ -31,11 +47,24 @@ public class BulletBehavior : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!_isActive)
+        {
+            return;
+        }
         Debug.Log(other.gameObject.name);
         if (other.gameObject.CompareTag("Enemy"))
         {
+            _audioSource.Play();
             Destroy(other.gameObject);
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterDelay());
         }
+    }
+
+    IEnumerator DestroyAfterDelay()
+    {
+        _isActive = false;
+        _meshRenderer.enabled = false;
+        yield return new WaitForSeconds(1f);
+        Destroy(gameObject);
     }
 }

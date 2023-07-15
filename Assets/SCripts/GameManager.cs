@@ -10,11 +10,16 @@ public class GameManager : MonoBehaviour
 
     private GameObject player;
     
+    private GameObject _gameOverScreen;
+    
     public List<GameObject> enemyPrefabs;
     
     void Start()
     {
+        Time.timeScale = 1f;
         player = GameObject.FindWithTag("Player");
+        _gameOverScreen = GameObject.FindWithTag("GameOverScreen");
+        _gameOverScreen.SetActive(false);
         StartCoroutine(SpawnEnemyCoroutine());
     }
 
@@ -46,7 +51,13 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        Debug.Log("Game over!");
         isGameOver = true;
+        Time.timeScale = 0f;
+        _gameOverScreen.SetActive(true);
+    }
+    
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
     }
 }

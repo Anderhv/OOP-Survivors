@@ -10,16 +10,25 @@ public class PlayerController : MonoBehaviour
     private GameManager _gm;
 
     public GameObject bulletPrefab;
+
+    private AudioSource _audio;
+    public AudioClip shootSound;
+    public AudioClip hurtSound;
     
     // Start is called before the first frame update
     void Start()
     {
         _health = maxHealth;
+        _audio = GetComponent<AudioSource>();
         _gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();        
     }
 
     private void Update()
     {
+        if (_gm.isGameOver)
+        {
+            return;
+        }
         // Shoot on left mouse click
         if (Input.GetMouseButtonDown(0))
         {
@@ -29,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
-        // Shoot a bullet from the player to the mouse position
+        // Shoot a bullet from the player towards the mouse position
         var mousePosition = Input.mousePosition;
         var mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         mouseWorldPosition.y = 0.3f;
@@ -37,17 +46,19 @@ public class PlayerController : MonoBehaviour
         var bullet = Instantiate(bulletPrefab, transform.position + direction * 0.5f, Quaternion.identity);
         var bulletBehavior = bullet.GetComponent<BulletBehavior>();
         bulletBehavior.SetDirection(direction);
+        // Play audio
+        _audio.PlayOneShot(shootSound);
     }
 
     public void TakeDamage(float damage)
     {
         _health -= damage;
+        _audio.PlayOneShot(hurtSound, 0.2f);
         EndGameIfDead();
     }
 
     private bool EndGameIfDead()
     {
-        Debug.Log(_health);
         if (_health <= 0)
         {
             _gm.EndGame();
